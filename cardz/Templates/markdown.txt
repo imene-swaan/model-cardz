@@ -1,0 +1,28 @@
+{# templates/markdown.txt #}
+
+<h1 align="center"> {{title}} </h1>
+
+<h3 align="center"> {{subtitle}} </h3>
+
+<h5 align="center"> {{description}} </h5>
+
+
+
+
+## Overview:
+
+<table cellspacing="1" cellpadding="2" valign="middle" style="border-collapse: collapse; border: none;">
+  <tbody>
+    <tr style="border: none;">
+      <td style="border: none;">
+      <h3 > Training Data </h3>
+
+- **{{ x_train_0 }}** observations and **{{ x_train_1 }}** features
+- The target variable **{{ y_train_name}}** is **{{ type of y_train }}** with mean **{{ mean_y_train}}** and standard deviation **{{ std_y_train}}**. 
+- {% if classification == True and imbalance == True%} This is a case of imbalanced classification where the data set has the following skewed proportions{{ class_1_name }}: {{ class_1_count}} ({{class_1_prop}}%) and {{ class_2_name }}: {{ class_2_count}} ({{class_2_prop}}%).{% endif %}
+        </td>
+      <td style="border: none;">
+        ![](HackerRank-Dashboard.png)
+      </td>
+  </tbody>
+</table>
