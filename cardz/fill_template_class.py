@@ -2,18 +2,14 @@ from jinja2 import Environment, FileSystemLoader
 
 
 
-meta_data = [
-    {"title": 'trial 0'},
-    {"subtitle": 'logistic regression'},
-    {"description": 'imbalanced classification'},
-    {'x_train_0': 100+2}
-]
+meta_data = {"title": 'trial 0',"subtitle": 'logistic regression'}
+
 
 environment = Environment(loader=FileSystemLoader("Templates/"))
-template = environment.get_template("markdown.txt")
+template = environment.get_template("markdown.md")
 
 
-filename = "cardz_1.txt"
+filename = "results/cardz_1.md"
 
 content = template.render(
         title=meta_data['title'],
