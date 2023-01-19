@@ -1,6 +1,7 @@
-from typing import List
+from .cardz_class import Cardz
+import pandas as pd
 
-class _descriptive_stat():
+class _descriptive_stat(Cardz):
     """
     This class creates descriptive statistics meta data for the model card generated
     ----------
@@ -15,14 +16,17 @@ class _descriptive_stat():
 
     def __init__(
         self,
-        xtrain,
-        y_train,
-        x_test,
-        y_test
+        x_train:pd.Dataframe=None,
+        y_train:pd.Series=None,
+        x_test:pd.Dataframe=None,
+        y_test:pd.Series=None,
+        y_pred:pd.Series=None
     ):
 
     
-    @staticmethod
-    def _mean(X) -> list:
-        
-        
+        self.xtrain = x_train
+        self.ytrain = y_train
+        self.xtest = x_test
+        self.ytest = y_test
+        self.ypred = y_pred
+        Cardz.__init__(self, self.xtrain , self.ytrain, self.xtest, self.ytest, self.ypred)
