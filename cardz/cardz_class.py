@@ -12,26 +12,23 @@ class Cardz():
     x_train: array
     """
     title = 'My Model Card'
-    subtitle = ' '
-    description = ' '
-    model_name = 'Regression'
+    subtitle = ''
+    description = ''
+    model_name = 'Unkown model'
 
     def __init__(
         self,
-        x_train:pd.Dataframe=None,
-        y_train:pd.Series=None,
-        x_test:pd.Dataframe=None,
-        y_test:pd.Series=None,
-        y_pred:pd.Series=None,
+        x_train:pd.DataFrame= pd.DataFrame(),
+        y_train:pd.Series=pd.Series(),
+        x_test:pd.DataFrame=pd.DataFrame(),
+        y_test:pd.Series=pd.Series(),
+        y_pred:pd.Series=pd.Series(),
 
         model_name:str=model_name,
         title:str=title,
         subtitle:str=subtitle,
         description:str= description
     ):
-        
-        import numpy as np
-
         
         self.xtrain = x_train
         self.ytrain = y_train

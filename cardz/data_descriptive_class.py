@@ -1,7 +1,7 @@
-from .cardz_class import Cardz
+from cardz_class import Cardz
 import pandas as pd
 
-class _descriptive_stat(Cardz):
+class Descriptive_statistics(Cardz):
     """
     This class creates descriptive statistics meta data for the model card generated
     ----------
@@ -14,19 +14,12 @@ class _descriptive_stat(Cardz):
 
     """
 
-    def __init__(
-        self,
-        x_train:pd.Dataframe=None,
-        y_train:pd.Series=None,
-        x_test:pd.Dataframe=None,
-        y_test:pd.Series=None,
-        y_pred:pd.Series=None
-    ):
-
+    def __init__(self, Data_stat:bool= True):
+        self.Data_stat = Data_stat
+        super().__init__(self)
     
-        self.xtrain = x_train
-        self.ytrain = y_train
-        self.xtest = x_test
-        self.ytest = y_test
-        self.ypred = y_pred
-        Cardz.__init__(self, self.xtrain , self.ytrain, self.xtest, self.ytest, self.ypred)
+    
+    def Training_data_description(self):
+        self.X_description = self.xtrain.describe().to_dict()
+        self.y_description = self.ytrain.describe().to_dict()
+
