@@ -1,5 +1,6 @@
 from cardz_class import Cardz
 import pandas as pd
+import numpy as np
 
 class Descriptive_statistics(Cardz):
     """
@@ -19,7 +20,37 @@ class Descriptive_statistics(Cardz):
         super().__init__(self)
     
     
-    def Training_data_description(self):
-        self.X_description = self.xtrain.describe().to_dict()
-        self.y_description = self.ytrain.describe().to_dict()
+    def X_description(self):
+        self.x_train_0 = self.xtrain.shape[0]
+        self.x_train_1 = self.xtrain.shape[1]
 
+        a = self.xtrain.dtypes.to_list()
+
+        from collections import Counter
+        t = Counter(a).keys()
+        c = Counter(a).values()
+
+        self.number_x_types = len(t)
+        self.x_types = [[t[i], c[i]] for i in range(len(t))]
+    
+        return self.x_train_0, self.x_train_1, self.number_x_types, self.x_types
+    
+
+    def Y_description(self):
+        self.type_y_train = self.ytrain.dtype
+        if self.type_y_train != object:
+            self.mean_y_train = np.mean(self.ytrain)
+            self.std_y_train = np.std(self.ytrain)
+
+            return self.type_y_train, self.mean_y_train, self.std_y_train
+
+        else:
+            from collections import Counter
+
+            t = Counter(self.ytrain.to_list()).keys()
+            c = Counter(self.ytrain.to_list()).values()
+
+            self.number_classes = len(t)
+            self.class_counts = [[t[i], c[i]] for i in range(len(t))]
+
+            return self.type_y_train, self.number_classes, self.class_counts

@@ -18,18 +18,21 @@ class Cardz():
 
     def __init__(
         self,
+        model,
+
         x_train:pd.DataFrame= pd.DataFrame(),
         y_train:pd.Series=pd.Series(),
         x_test:pd.DataFrame=pd.DataFrame(),
         y_test:pd.Series=pd.Series(),
         y_pred:pd.Series=pd.Series(),
 
-        model_name:str=model_name,
         title:str=title,
         subtitle:str=subtitle,
         description:str= description
     ):
         
+        self.model = model
+
         self.xtrain = x_train
         self.ytrain = y_train
         self.xtest = x_test
@@ -39,7 +42,6 @@ class Cardz():
         self.title = title
         self.subtitle = subtitle
         self.description = description
-        self.model_name = model_name
     
 
         
