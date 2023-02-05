@@ -22,19 +22,23 @@
   
   {% if regression %}
 - The target variable is **{{ type_y_train }}** with mean **{{ mean_y_train}}** and standard deviation **{{ std_y_train}}**. 
-  {% else if classification%}
-- there are {{ number_classes }} classes in this classification task. 
-    {% if imbalanced %}
-- This is a case of imbalanced classification where the data set has the following skewed proportions{{ class_1_name }}: {{ class_1_count}} ({{class_1_prop}}%) and {{ class_2_name }}: {{ class_2_count}} ({{class_2_prop}}%).
-    {% endif %}
+
 
   {% else %}
 - This is an unsupervised machine learning task called Clustering.
   {% endif %} 
         </td>
-      {%if picture}
+      {% if picture %}
       <td style="border: none;">
         ![](assets/HackerRank-Dashboard.png)
       </td>
+      {% else %}
+      {% endif %}
   </tbody>
 </table>
+
+  {% else if classification%}
+- there are {{ number_classes }} classes in this classification task.
+    {% if imbalanced %}
+- This is a case of imbalanced classification where the data set has the following skewed proportions{{ class_1_name }}: {{ class_1_count}} ({{class_1_prop}}%) and {{ class_2_name }}: {{ class_2_count}} ({{class_2_prop}}%).
+    {% endif %}
