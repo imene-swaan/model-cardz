@@ -1,4 +1,5 @@
 import pandas as pd
+from typing import Literal
 
 
 class Cardz():
@@ -11,14 +12,11 @@ class Cardz():
     
     x_train: array
     """
-    title = 'My Model Card'
-    subtitle = ''
-    description = ''
-    model_name = 'Unkown model'
+
 
     def __init__(
         self,
-        model,
+        model: Literal["auto", "regression", "classification"],
 
         x_train:pd.DataFrame= pd.DataFrame(),
         y_train:pd.Series=pd.Series(),
@@ -26,12 +24,17 @@ class Cardz():
         y_test:pd.Series=pd.Series(),
         y_pred:pd.Series=pd.Series(),
 
-        title:str=title,
-        subtitle:str=subtitle,
-        description:str= description
+        title:str= 'My Model Card',
+        subtitle:str= '',
+        description:str= ''
     ):
         
-        self.model = model
+
+
+        if model == 'auto':
+            self.model = 'Unkown model'
+        else:
+            self.model = model
 
         self.xtrain = x_train
         self.ytrain = y_train
@@ -42,6 +45,7 @@ class Cardz():
         self.title = title
         self.subtitle = subtitle
         self.description = description
+
     
 
         
