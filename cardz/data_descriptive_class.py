@@ -15,14 +15,21 @@ class Descriptive_statistics(Cardz):
 
     """
 
-    def __init__(self, Data_stat:bool= True):
+    def __init__(self, x_train, y_train, model, Data_stat:bool= True):
+        super().__init__(x_train, y_train, model)
         self.Data_stat = Data_stat
-        super().__init__(self)
+
+        if self.Data_stat:
+            self.xresults = {}
+
+        if self.model == 'auto':
+            self.state = 'shut'
+        
     
     
     def X_description(self):
-        self.x_train_0 = self.xtrain.shape[0]
-        self.x_train_1 = self.xtrain.shape[1]
+        self.xresults['x_train_0'] = self.xtrain.shape[0]
+        self.xresults['x_train_1'] = self.xtrain.shape[1]
 
         a = self.xtrain.dtypes.to_list()
 
@@ -30,10 +37,10 @@ class Descriptive_statistics(Cardz):
         t = Counter(a).keys()
         c = Counter(a).values()
 
-        self.number_x_types = len(t)
-        self.x_types = [[t[i], c[i]] for i in range(len(t))]
+        self.xresults['number_x_types'] = len(t)
+        self.xresults['x_types'] = [[t[i], c[i]] for i in range(len(t))]
     
-        return self.x_train_0, self.x_train_1, self.number_x_types, self.x_types
+        return self.xresults
     
 
     def Y_description(self):
