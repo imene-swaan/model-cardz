@@ -1,5 +1,8 @@
 import pandas as pd
 from typing import Literal
+from jinja2 import Environment, FileSystemLoader
+import jinja2
+import os
 
 
 class Cardz():
@@ -47,6 +50,8 @@ class Cardz():
         self.description = description
 
 
+
+
     def get_meta_data(self):
         meta_data = {"title": self.title ,"subtitle": self.subtitle, 'description': self.description, 'model': self.model}
     
@@ -55,7 +60,6 @@ class Cardz():
 
 
     def fill_template(self, template, meta_data:dict):
-        from jinja2 import Environment, FileSystemLoader
 
         environment = Environment(loader=FileSystemLoader("Templates/"))
 
@@ -75,8 +79,23 @@ class Cardz():
 
 
         
-        print('card saved in directory: ../results/cardz_2.md')
+        print('card saved in directory: ../results/' + file_name)
+
+
+
+
+    def _jinja_loader(self, template_dir: str) -> jinja2.FileSystemLoader:
+        return jinja2.FileSystemLoader(template_dir)
     
+
+    def _write_file(self, path: str, content: str) -> None:
+        """Write content to the path."""
+
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+
+        with open(path, 'w+') as f:
+            f.write(content)
+        
 
 
 
@@ -100,7 +119,9 @@ yp = clf.predict(tx)
 def main():
 
     card = Cardz(model = 'classification', x_train= x, y_train= y, x_test= tx, y_test= ty, y_pred= yp)
-    return card.get_card('cardz_3.md')
+    card.get_card('cardz_3.md')
+
+    print(card.model)
     
 
 
