@@ -49,11 +49,13 @@ class Cardz():
         self.subtitle = subtitle
         self.description = description
 
+        self.y_type = self.ytrain.dtype
+
 
 
 
     def get_meta_data(self):
-        meta_data = {"title": self.title ,"subtitle": self.subtitle, 'description': self.description, 'model': self.model}
+        meta_data = {"title": self.title ,"subtitle": self.subtitle, 'description': self.description, 'type_y_train': self.y_type, 'model': self.model}
     
         return meta_data
 
@@ -112,13 +114,13 @@ from sklearn.model_selection import train_test_split
 X, Y = load_iris(return_X_y=True)
 x, tx, y, ty = train_test_split(X, Y, test_size=0.33, random_state=42)
 
-clf = LogisticRegression(random_state=0).fit(x, y)
+clf = LogisticRegression(max_iter=200).fit(x, y)
 yp = clf.predict(tx)
         
 
 def main():
 
-    card = Cardz(model = 'classification', x_train= x, y_train= y, x_test= tx, y_test= ty, y_pred= yp)
+    card = Cardz(model = 'regression', x_train= x, y_train= y, x_test= tx, y_test= ty, y_pred= yp)
     card.get_card('cardz_3.md')
 
     print(card.model)

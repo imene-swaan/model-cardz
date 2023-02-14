@@ -8,7 +8,9 @@
 
 
 
-
+## The DATA
+##
+### Training Data:
   
   {% if model == 'regression' %}
 - The target variable is **{{ type_y_train }}** with mean **{{ mean_y_train}}** and standard deviation **{{ std_y_train}}**. 

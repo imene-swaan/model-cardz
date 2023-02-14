@@ -8,10 +8,13 @@
 
 
 
+## The DATA
+##
+### Training Data:
+  
+  
+- The target variable is **int64** with mean **** and standard deviation ****. 
+  
 
-  
-  
-- there are  classes in this classification task.
-  
    
 
