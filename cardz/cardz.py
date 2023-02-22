@@ -54,6 +54,8 @@ class Cardz():
 
 
 
+
+
     def get_meta_data(self):
         meta_data = {"title": self.title ,"subtitle": self.subtitle, 'description': self.description, 'type_y_train': self.y_type, 'model': self.model}
     
