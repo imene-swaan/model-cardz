@@ -5,6 +5,8 @@ import jinja2
 import os
 import json
 import openai
+import inspect
+from importlib import import_module
 #import backoff
 
 
@@ -13,8 +15,15 @@ import openai
 # Path: cardz/src/utils/utils.py
 
 
+def gpt_api():
+    with open('../assets/api_key.txt') as f:
+        api_key = f.read()
+    return api_key
+
+
 def get_task(model):
-    if type(model).split('.')[0] == 'sklearn':
+    m = str(type(model)).split("'")[1]
+    if m.split('.')[0] == 'sklearn':
         task = 'ML'
     else:
         task = 'DL'
@@ -26,16 +35,15 @@ def get_task(model):
 
 
 #@backoff.on_exception(backoff.expo, openai.error.RateLimitError, max_time=120)
-
 def gpt3_model_description(model_name: str, task: str):
     # Replace YOUR_API_KEY with your OpenAI API key
-    openai.api_key = "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"
+    openai.api_key = gpt_api()
 
 
     # Set the model and prompt
     model_engine = "text-davinci-003"
 
-    prompt = 'what type of {task} model is {model_name}? is it a classification model? is it a regression model? give me a short description of the model. what is the model used for?'
+    prompt = f'what type of {task} model is {model_name}? is it a classification model, a clustering model, or a regression model? give me a short description of the model. what is the model used for? answer me in 3 to 4 sentences'
     # Set the maximum number of tokens to generate in the response
     max_tokens = 200
 
@@ -56,9 +64,100 @@ def gpt3_model_description(model_name: str, task: str):
 
 
 
+def get_model_type(model_description: str) -> str:
+    if 'classification' in model_description:
+        model_type = 'classification'
+    elif 'regression' in model_description:
+        model_type = 'regression'
+    elif 'clustering' in model_description:
+        model_type = 'clustering'
+    else:
+        model_type = 'other'
+    return model_type
 
 
-def save_meta_data(meta_data: dict, path: str= 'results/metrics.json'):
+
+def get_current_model_params(model):
+
+    task = get_task(model)[1]
+
+    if task == 'ML':
+        current_model_params = model.get_params()
+    return current_model_params
+
+
+def get_default_model(model):
+    mod = str(type(model)).split("'")[1]
+    p, m = mod.rsplit('.', 1)
+
+    mod = import_module(p)
+    default_model = getattr(mod, m)
+    return default_model()
+
+
+def get_model_default_params(model):
+
+    default_model = get_default_model(model)
+    signature = inspect.signature(default_model)
+    return {
+        k: v.default
+        for k, v in signature.parameters.items()
+        if v.default is not inspect.Parameter.empty
+    }
+
+def get_model_params(model):
+    current_model_params = get_current_model_params(model)
+    default_model_params = get_model_default_params(model)
+
+    model_params = {k: [current_model_params[k], default_model_params[k]] for k in current_model_params.keys()}
+    return model_params
+
+    
+
+def gpt3_model_params_description(model_name: str):
+    # Replace YOUR_API_KEY with your OpenAI API key
+    openai.api_key = gpt_api()
+
+
+    # Set the model and prompt
+    model_engine = "text-davinci-003"
+
+    prompt = f'Describe all the hyperparameters of the {model_name} model. Each hyperparamater description should be in a separate sentence and format should be: "hyperparameter name: description of the hyperparameter".'
+    # Set the maximum number of tokens to generate in the response
+    max_tokens = 250
+
+    # Generate a response
+    completion = openai.Completion.create(
+        engine=model_engine,
+        prompt=prompt,
+        max_tokens=max_tokens,
+        temperature=0.6,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0
+    )
+
+    # Print the response
+    params_description = completion.choices[0].text.split('.')
+    model_params_description = {}
+    for i in params_description:
+        model_params_description[i.split(':')[0]] = i.split(':')[1]
+    
+    return model_params_description
+
+
+
+
+
+
+
+
+
+
+
+
+
+def save_meta_data(meta_data: dict, path: str):
     """ 
     Save the meta data of the model in a json file. 
     """ 
@@ -67,43 +166,22 @@ def save_meta_data(meta_data: dict, path: str= 'results/metrics.json'):
 
 
 
-def get_meta_data():
-    with open('metrics.json', 'r') as f:
-        meta_data = json.load(f)
-
-    return meta_data
-
-def  get_model_card_template ( task :  str, MD: str= 'ML'):
+def  get_model_card_template( model_type: str, task: str):
     """ 
     Generate a model card template from a prompt. 
     """ 
     environment = Environment(loader=FileSystemLoader("Templates/"))
-    model_card_template = environment.get_template(f'{task}_{MD}.md')
+    model_card_template = environment.get_template(f'{model_type}_{task}.md')
 
     return  model_card_template
 
 
 
-def fill_template(task, meta_data:dict):
+def fill_template(model_type: str, task: str,  meta_data:dict):
         
-    temp = get_model_card_template(task)
+    temp = get_model_card_template(model_type, task)
     content = temp.render(meta_data)
 
     return content
-
-
-
-def save_card(task, file_name: str):
-
-    meta_data = get_meta_data()
-    content = fill_template(task, meta_data)
-        
-    with open('results/' + file_name, mode = 'w', encoding= 'utf-8') as message:
-        message.write(content)
-
-
-        
-    print('card saved in directory: ../results/' + file_name)
-
 
 

@@ -15,17 +15,18 @@
 
 ## Model Details
 
-The model was created using Scikit-Learn's {{ task }} {{ model_name }} algorithm with the following settings:
+The model was created using Scikit-Learn's {{ model_name }} algorithm with the following hyperparameters:
 
-- **Number of Estimators:** {{ model_hyperparameters.n_estimators }}
-- **Maximum Depth:** {{ model_hyperparameters.max_depth }}
-- **Criterion:** {{ model_hyperparameters.criterion }}
-- **Bootstrap:** {{ model_hyperparameters.bootstrap }}
-
-| Hyperparameter | value |
+| Hyperparameter | value | Default |
 |---------|------------|
-{% for param, val in params %}
-| {{ param }} | {{ val }} |
+{% for param, val in model_params %}
+| {{ param }} | {{ val[0] }} | {{ val[1] }} |
+{% endfor %}
+
+A short description of the hyperparameters of the {{ model_name }} model:
+
+{% for param, desc in model_params_description %}
+- **{{ param }}:** {{ desc }}
 {% endfor %}
 
 ### Preprocessing Steps
