@@ -19,7 +19,7 @@ from importlib import import_module
 
 
 def gpt_api():
-    with open('../assets/api_key.txt') as f:
+    with open('api_key.txt') as f:
         api_key = f.read()
     return api_key
 

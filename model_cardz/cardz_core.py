@@ -6,7 +6,7 @@ import jinja2
 import os
 import re
 
-from utils import utils
+from model_cardz.utils import utils
 
 class Cardz():
     """
