@@ -1,6 +1,5 @@
-# model-cardz
-
-# Example card:
+# model-cardz - Example card:
+--------------------------------------
 # The LogisticRegression Card
 
 ##### This model card was generated automatically using the Cardz library.
