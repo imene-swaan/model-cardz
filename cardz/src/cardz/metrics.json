@@ -1,0 +1,93 @@
+{
+    "title": "The LogisticRegression Card",
+    "subtitle": "This model card was generated automatically using the Cardz library.",
+    "model_name": "LogisticRegression",
+    "model_description": "\n\nLogisticRegression is a classification model. It is used to predict a binary outcome (0 or 1, yes or no, true or false) by estimating probabilities using a logistic function. Logistic regression is used in a variety of scenarios such as predicting whether a customer will default on a loan, or predicting whether a patient has a certain disease.",
+    "model_params": {
+        "C": [
+            1.0,
+            1.0
+        ],
+        "class_weight": [
+            null,
+            null
+        ],
+        "dual": [
+            false,
+            false
+        ],
+        "fit_intercept": [
+            true,
+            true
+        ],
+        "intercept_scaling": [
+            1,
+            1
+        ],
+        "l1_ratio": [
+            null,
+            null
+        ],
+        "max_iter": [
+            200,
+            100
+        ],
+        "multi_class": [
+            "auto",
+            "auto"
+        ],
+        "n_jobs": [
+            null,
+            null
+        ],
+        "penalty": [
+            "l2",
+            "l2"
+        ],
+        "random_state": [
+            null,
+            null
+        ],
+        "solver": [
+            "lbfgs",
+            "lbfgs"
+        ],
+        "tol": [
+            0.0001,
+            0.0001
+        ],
+        "verbose": [
+            0,
+            0
+        ],
+        "warm_start": [
+            false,
+            false
+        ]
+    },
+    "model_params_description": [
+        "C: inverse of regularization strength;",
+        "Class_weight: set the parameters for different classes for unbalanced datasets;",
+        "Dual: dual or primal formulation;",
+        "Fit_intercept: whether to calculate the intercept;",
+        "Intercept_scaling: scaling of the intercept;",
+        "L1_ratio: the Elastic Net mixing parameter, with 0<=l1_ratio<=1;",
+        "Max_iter: maximum number of iterations;",
+        "Multi_class: ovr, multinomial or binary;",
+        "N_jobs: number of jobs to use for computation;",
+        "Penalty: norm used in the penalization;",
+        "Random_state: seed of the pseudorandom number generator;",
+        "Solver: Algorithms to use in the optimization problem;",
+        "Tol: tolerance for stopping criteria;",
+        "Verbose: level of verbosity of the solver;",
+        "Warm_start: When set to True, reuse the solution of the previous call to fit as initialization."
+    ],
+    "intended_use": "This experiment was conducted to test the performance of the classification ML model: LogisticRegression on our dataset.",
+    "feature_importance": {
+        "feature_0": 0.8558838247165591,
+        "feature_1": -0.3899730295470144,
+        "feature_2": -0.9526578100271536,
+        "feature_3": -2.2440109771263574
+    },
+    "feature_importance_plot": "assets/LogisticRegression_feature_importance.png"
+}

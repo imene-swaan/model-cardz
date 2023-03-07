@@ -1,8 +1,10 @@
 import pandas as pd
 from typing import Literal, Optional
 from jinja2 import Environment, FileSystemLoader
+import matplotlib.pyplot as plt
 import jinja2
 import os
+import re
 
 from utils import utils
 
@@ -32,8 +34,18 @@ class Cardz():
 
         title:str = 'auto',
         intended_use: str= 'auto',
+        column_names: list = None,
     ):
         
+
+        self.column_names = column_names
+
+        if self.column_names is None:
+            try:
+                self.column_names = list(x_train.columns)
+            except:
+                self.column_names = [f'feature_{i}' for i in range(x_train.shape[1])]
+
         self.model = model
 
         self.xtrain = x_train
@@ -56,7 +68,7 @@ class Cardz():
         
 
 
-        self.subtitle = 'This model card was generated using the Cardz library.'
+        self.subtitle = 'This model card was generated automatically using the Cardz library.'
         
 
         self.model_description = utils.gpt3_model_description(self.model_name, self.task)
@@ -71,10 +83,11 @@ class Cardz():
 
         self.model_params = utils.get_model_params(self.model)
 
-        self.model_params_description = utils.gpt3_model_params_description(self.model_name)
+        self.model_params_description = utils.gpt3_model_params_description(self.model_name, self.model_params.keys(), self.task)
 
+        self.feature_importance = utils.get_feature_importance(self.model, self.model_type, self.column_names)
 
-
+        self.feature_importance_plot_directory = utils.def_feature_importance_plot(self.feature_importance, self.model_name)
     
     
     def metrics(self):
@@ -82,12 +95,12 @@ class Cardz():
             'title': self.title,
             'subtitle': self.subtitle,
             'model_name': self.model_name,
-            'model_type': self.model_type,
             'model_description': self.model_description,
             'model_params': self.model_params,
             'model_params_description': self.model_params_description,
             'intended_use': self.intended_use,
-            'task': self.task
+            'feature_importance': self.feature_importance,
+            'feature_importance_plot': self.feature_importance_plot_directory,
         }
         return meta_data
     
@@ -99,31 +112,28 @@ class Cardz():
         """
         meta_data = self.metrics()
 
-        # --- General outputs directory
-        if not os.path.exists('../outputs/cardz'):
-            os.mkdir('../outputs/cardz')
-
-        # --- Model card directory
-        if not os.path.exists(f'../outputs/cardz/{self.model_name}'):
-            os.mkdir(f'../outputs/cardz/{self.model_name}')
 
 
 
         # --- Save the meta data
         if save_metrics:
-            utils.save_meta_data(meta_data, f'../outputs/cardz/{self.model_name}/metrics.json')
+            utils.save_meta_data(meta_data, f'cardz/metrics.json')
 
 
 
         # --- Fill the template
         content = utils.fill_template(self.model_type, self.task, meta_data)
 
+
+        if file_name == 'model_card':
+            file_name = self.model_name + '_card'
+
         # --- Save the model card
-        with open(f'../outputs/cardz/{self.model_name}/{file_name}.md', 'w') as f:
+        with open(f'cardz/{file_name}.md', 'w') as f:
             f.write(content)
 
         
-        print(f'card saved in directory: ../outputs/cardz/{self.model_name}/{file_name}.md')
+        print(f'card saved in directory: cardz/{file_name}.md')
 
       
     

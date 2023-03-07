@@ -1,8 +1,11 @@
 import pandas as pd
 from typing import Literal
 from jinja2 import Environment, FileSystemLoader
+import numpy as np
+import matplotlib.pyplot as plt
 import jinja2
 import os
+import re
 import json
 import openai
 import inspect
@@ -98,12 +101,7 @@ def get_default_model(model):
 def get_model_default_params(model):
 
     default_model = get_default_model(model)
-    signature = inspect.signature(default_model)
-    return {
-        k: v.default
-        for k, v in signature.parameters.items()
-        if v.default is not inspect.Parameter.empty
-    }
+    return default_model.get_params()
 
 def get_model_params(model):
     current_model_params = get_current_model_params(model)
@@ -114,15 +112,19 @@ def get_model_params(model):
 
     
 
-def gpt3_model_params_description(model_name: str):
+def gpt3_model_params_description(model_name: str, params, task: str = 'ML'):
     # Replace YOUR_API_KEY with your OpenAI API key
     openai.api_key = gpt_api()
-
+    params = ' '.join(params)
 
     # Set the model and prompt
     model_engine = "text-davinci-003"
-
-    prompt = f'Describe all the hyperparameters of the {model_name} model. Each hyperparamater description should be in a separate sentence and format should be: "hyperparameter name: description of the hyperparameter".'
+    if task == 'ML':
+        prompt = f'give me a short description of these hyperparameters: {params}  of the model {model_name} from the sklearn library, the description should be in a separate sentence and the format has to be: "hyperparameter name: description of the hyperparameter".'
+    
+    else:
+        prompt = f'describe all hyperparamaters of the model {model_name}, the description should be in a separate sentence and the format has to be: "hyperparameter name: description of the hyperparameter".'
+    
     # Set the maximum number of tokens to generate in the response
     max_tokens = 250
 
@@ -130,27 +132,44 @@ def gpt3_model_params_description(model_name: str):
     completion = openai.Completion.create(
         engine=model_engine,
         prompt=prompt,
-        max_tokens=max_tokens,
-        temperature=0.6,
-        top_p=1,
-        frequency_penalty=0,
-        presence_penalty=0
+        max_tokens=max_tokens
     )
 
     # Print the response
-    params_description = completion.choices[0].text.split('.')
-    model_params_description = {}
-    for i in params_description:
-        model_params_description[i.split(':')[0]] = i.split(':')[1]
+    params_description = completion.choices[0].text.lstrip()
     
-    return model_params_description
+    return params_description.split('\n')
 
 
 
 
+def get_feature_importance(model, model_type, column_names):
+    
+    if 'tree' in str(type(model)):
+        importance = sorted(model.feature_importances_ , reverse=True)
+    
+    else:
+        # get importance
+        if model_type == 'classification':
+            importance = sorted(list(model.coef_[0]), reverse=True)
+
+        else:
+            importance = sorted(list(model.coef_), reverse=True)
+    
+    # summarize feature importance
+    feature_importance = {k: v for (k,v) in zip(column_names, importance)}
+
+    return feature_importance
 
 
+def def_feature_importance_plot(feature_importance: dict, model_name: str):
+    # plot feature importance
+    
+    plt.bar(feature_importance.keys(), feature_importance.values())
+    plt.title(f'Feature Importance of {model_name}')
+    plt.savefig(f'cardz/assets/{model_name}_feature_importance.png')
 
+    return f'assets/{model_name}_feature_importance.png'
 
 
 
