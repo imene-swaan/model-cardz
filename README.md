@@ -89,4 +89,4 @@ The following table shows the feature importances for the model:
 
 The following Bar Plot shows the feature importances for the model:
 
-![Feature Importances](assets/LogisticRegression_feature_importance.png)
+![Feature Importances](model_cardz/cardz/assets/LogisticRegression_feature_importance.png)
